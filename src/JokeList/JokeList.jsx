@@ -12,15 +12,33 @@ const JokeList = () => {
   
   const api = 'https://icanhazdadjoke.com/'
 
+  // useEffect(() => {
+  //   const initialJokes = async () => {
+  //     try {
+  //       const newJokes = await Promise.all([...Array(10)].map(fetchJoke))
+  //       setJokesArray(newJokes)
+  //     } 
+  //     catch (error) {
+  //       console.log('this is error in the useEffect', error)
+  //       return 'Yikes'
+  //     }
+  //   }
+  //   initialJokes()
+  // }, [])
+
   useEffect(() => {
     const initialJokes = async () => {
       try {
-        const newJokes = await Promise.all([...Array(10)].map(fetchJoke))
+        const newJokes = []
+        for (let i = 0; i <  10; i++){
+          const joke = await fetchJoke()
+          newJokes.push(joke)
+        }
         setJokesArray(newJokes)
-      } 
+      }
       catch (error) {
-        console.log('this is error in the useEffect', error)
-        return 'Yikes'
+        console.log('this is error in useEffect', error)
+        return 'No jokes for you'
       }
     }
     initialJokes()
@@ -41,12 +59,19 @@ const JokeList = () => {
     }
   }
 
+  const handleClick = async () => {
+    const joke = await fetchJoke()
+    setJokesArray([...jokesArray, joke])
+  }
+
+
   const jokesList = jokesArray.map(joke => (
     <Joke key={uuidv4()} joke={joke}/>
   ))
 
   return ( 
     <div>
+      <button onClick={() => handleClick()}>Add Joke</button>
       {jokesList}
     </div>
   );
