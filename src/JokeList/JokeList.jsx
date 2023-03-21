@@ -8,7 +8,7 @@ const JokeList = () => {
 
   // const [joke, setJoke] = useState([])
   const [jokesArray, setJokesArray] = useState([])
-  // const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   
   const api = 'https://icanhazdadjoke.com/'
 
@@ -31,6 +31,7 @@ const JokeList = () => {
       try {
         const newJokes = []
         for (let i = 0; i <  10; i++){
+          setIsLoading(true)
           const joke = await fetchJoke()
           if (newJokes.some(newJoke => newJoke.id === joke.id)){
             joke = await fetchJoke()
@@ -38,6 +39,7 @@ const JokeList = () => {
           }
           newJokes.push(joke)
         }
+        setIsLoading(false)
         setJokesArray(newJokes)
       }
       catch (error) {
@@ -52,6 +54,7 @@ const JokeList = () => {
     try {
       const config = {headers: {Accept: 'application/json'}}
       const res = await axios.get(api, config)
+      
       // console.log('this is res', res.data.joke);
       let newJoke = res.data
       newJoke.votes = 0
@@ -76,7 +79,7 @@ const JokeList = () => {
   return ( 
     <div>
       <button onClick={() => handleClick()}>Add Joke</button>
-      {jokesList}
+      {isLoading ? <h3>Jokes are loading...</h3> : jokesList}
     </div>
   );
 }

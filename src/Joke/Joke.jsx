@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styles from './Joke.module.css'
 
 const Joke = ({ joke }) => {
 
@@ -9,7 +10,7 @@ const Joke = ({ joke }) => {
   }
 
   return ( 
-    <div>
+    <div className={styles.jokeDiv}>
       <div>
         <button onClick={() => handleClick(-1)}>-</button>
         <p>{votes}</p>
