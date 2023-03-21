@@ -32,6 +32,10 @@ const JokeList = () => {
         const newJokes = []
         for (let i = 0; i <  10; i++){
           const joke = await fetchJoke()
+          if (newJokes.some(newJoke => newJoke.id === joke.id)){
+            joke = await fetchJoke()
+            newJokes.push(joke)
+          }
           newJokes.push(joke)
         }
         setJokesArray(newJokes)
