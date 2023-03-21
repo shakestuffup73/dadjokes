@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import Joke from "../Joke/Joke";
+import styles from './JokeList.module.css'
 
 const JokeList = () => {
   
-
   // const [joke, setJoke] = useState([])
   const [jokesArray, setJokesArray] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -32,7 +32,7 @@ const JokeList = () => {
         const newJokes = []
         for (let i = 0; i <  10; i++){
           setIsLoading(true)
-          const joke = await fetchJoke()
+          let joke = await fetchJoke()
           if (newJokes.some(newJoke => newJoke.id === joke.id)){
             joke = await fetchJoke()
             newJokes.push(joke)
@@ -79,7 +79,7 @@ const JokeList = () => {
   return ( 
     <div>
       <button onClick={() => handleClick()}>Add Joke</button>
-      {isLoading ? <h3>Jokes are loading...</h3> : jokesList}
+      {isLoading ? <div className={styles.loader} /> : jokesList}
     </div>
   );
 }
