@@ -28,11 +28,29 @@ const Joke = ({ joke, handleVote }) => {
     }
   }
 
+  function getColor() {
+    if (votes >= 15) {
+      return '#4CAF50';
+    } else if (votes >= 12) {
+      return '#8BC34A';
+    } else if (votes >= 9) {
+      return '#CDDC39';
+    } else if (votes >= 6) {
+      return '#FFEB3B';
+    } else if (votes >= 3) {
+      return '#FFC107';
+    } else if (votes >= 0) {
+      return '#FF9800';
+    } else {
+      return '#F44336';
+    }
+  }
+
   return ( 
     <div className='joke'>
       <div className='voteBtns'>
         <i className='voteBtn fa-sharp fa-solid fa-arrow-down' onClick={() => handleVoteClick(-1)}></i>
-        <div className='votes'>
+        <div className='votes' style={{borderColor: getColor(), borderWidth: '5px'}}>
         {votes}
         </div>
         <i className='voteBtn fa-sharp fa-solid fa-arrow-up' onClick={() => handleVoteClick(1)}></i>
