@@ -6,9 +6,13 @@ import './JokeList.css'
 
 const JokeList = () => {
   
-  // const [joke, setJoke] = useState([])
+  const [jokesArray, setJokesArray] = useState(JSON.parse(window.localStorage.getItem('jokes') || []))
   
-  const [jokesArray, setJokesArray] = useState([])
+  window.localStorage.setItem(
+    'jokes',
+    JSON.stringify(jokesArray)
+  )
+
   const [isLoading, setIsLoading] = useState(false)
   
   const api = 'https://icanhazdadjoke.com/'
@@ -26,81 +30,74 @@ const JokeList = () => {
   //   }
   //   initialJokes()
   // }, [])
+  
+  const fetchJoke = async () => {
+    try {
+      const config = { headers: { Accept: 'application/json' } }
+      const res = await axios.get(api, config)
+      let newJoke = res.data
+      newJoke.votes = 0
+      return newJoke
+    } catch (error) {
+      console.log('ERROR!: ', error)
+      return "No jokes for you, sorry!"
+    }
+  } 
 
   useEffect(() => {
     const initialJokes = async () => {
       try {
-        const newJokes = []
-        for (let i = 0; i <  10; i++){
+        const newJokes = [];
+        for (let i = 0; i < 10; i++) {
           setIsLoading(true)
-          let joke = await fetchJoke()
-          if (newJokes.some(newJoke => newJoke.id === joke.id)){
+          let joke = await fetchJoke();
+          if (newJokes.some(newJoke => newJoke.id === joke.id )) {
             joke = await fetchJoke()
             newJokes.push(joke)
-          }
-          else {
+          } else {
             newJokes.push(joke)
           }
         }
         setIsLoading(false)
-        setJokesArray(newJokes)
+        setJokesArray(newJokes); 
+      } catch (error) {
+        console.log('ERROR!: ', error);
+        return 'No jokes for you, sorry!';
       }
-      catch (error) {
-        console.log('this is error in useEffect', error)
-        return 'No jokes for you'
-      }
-    }
-    initialJokes()
-  }, [])
-
-  const fetchJoke = async () => {
-    try {
-      const config = {headers: {Accept: 'application/json'}}
-      const res = await axios.get(api, config)
-      
-      // console.log('this is res', res.data.joke);
-      let newJoke = res.data
-      newJoke.votes = 0
-      return newJoke
-      // console.log('this is newJoke', newJoke)
-    }
-    catch(error) {
-      console.log('this is error in fetchJoke', error)
-    }
-  }
+    };
+    initialJokes();
+  }, []);
 
   const handleClick = async () => {
-    let newJoke = await fetchJoke()
+    let newJoke = await fetchJoke();
     if (jokesArray.some(joke => joke.id === newJoke.id )) {
       newJoke = await fetchJoke()
       setJokesArray([...jokesArray, newJoke])
-    }
-    else {
+    } else {
       setJokesArray([...jokesArray, newJoke])
     }
   }
 
   const handleVote = (id, amount) => {
     const updatedJokesArray = jokesArray.map(joke => {
-      if (joke.id === id){
-        // take prev joke object, set the votes to joke.votes with the +1 or -1 added to it
+      if (joke.id === id) {
         return {...joke, votes: joke.votes + amount}
       } else {
         return joke
       }
     })
     setJokesArray(updatedJokesArray)
-  }
-  
-  const sortedJokes = jokesArray.sort((a, b) => {
-    return b.votes-a.votes
-  })
+  };
 
-  const jokesList = sortedJokes.map(joke => (
-    <Joke key={uuidv4()} joke={joke} handleVote={handleVote}/>
+  const sortedJokes = jokesArray.sort((a, b) => (b.votes - a.votes))
+  
+  const jokesList = sortedJokes.map((joke) => (
+    <Joke 
+      key={uuidv4()}
+      joke={joke}
+      handleVote={handleVote}
+    />
   ))
-  
-  
 
   return ( 
     <div className='jokeListBody'>     
