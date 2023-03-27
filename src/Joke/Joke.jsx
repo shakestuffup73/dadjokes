@@ -31,7 +31,7 @@ const Joke = ({ joke, handleVote }) => {
   return ( 
     <div className='joke'>
       <div className='voteBtns'>
-        <i className='voteBtn fa-sharpfa-solid fa-arrow-down' onClick={() => handleVoteClick(-1)}></i>
+        <i className='voteBtn fa-sharp fa-solid fa-arrow-down' onClick={() => handleVoteClick(-1)}></i>
         <div className='votes'>
         {votes}
         </div>
