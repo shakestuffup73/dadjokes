@@ -6,7 +6,7 @@ import './JokeList.css'
 
 const JokeList = () => {
   
-  const [jokesArray, setJokesArray] = useState(JSON.parse(window.localStorage.getItem('jokes') || []))
+  const [jokesArray, setJokesArray] = useState(JSON.parse(window.localStorage.getItem('jokes')))
   
   window.localStorage.setItem(
     'jokes',
@@ -17,19 +17,19 @@ const JokeList = () => {
   
   const api = 'https://icanhazdadjoke.com/'
 
-  // useEffect(() => {
-  //   const initialJokes = async () => {
-  //     try {
-  //       const newJokes = await Promise.all([...Array(10)].map(fetchJoke))
-  //       setJokesArray(newJokes)
-  //     } 
-  //     catch (error) {
-  //       console.log('this is error in the useEffect', error)
-  //       return 'Yikes'
-  //     }
-  //   }
-  //   initialJokes()
-  // }, [])
+  useEffect(() => {
+    const initialJokes = async () => {
+      try {
+        const newJokes = await Promise.all([...Array(10)].map(fetchJoke))
+        setJokesArray(newJokes)
+      } 
+      catch (error) {
+        console.log('this is error in the useEffect', error)
+        return 'Yikes'
+      }
+    }
+    initialJokes()
+  }, [])
   
   const fetchJoke = async () => {
     try {
@@ -89,9 +89,9 @@ const JokeList = () => {
     setJokesArray(updatedJokesArray)
   };
 
-  const sortedJokes = jokesArray.sort((a, b) => (b.votes - a.votes))
+  const sortedJokes = jokesArray?.sort((a, b) => (b.votes - a.votes))
   
-  const jokesList = sortedJokes.map((joke) => (
+  const jokesList = sortedJokes?.map((joke) => (
     <Joke 
       key={uuidv4()}
       joke={joke}
